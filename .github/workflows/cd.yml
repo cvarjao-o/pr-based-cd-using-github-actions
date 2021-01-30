@@ -35,14 +35,16 @@ jobs:
             const isCollaborator = (await github.repos.checkCollaborator({owner: repository_owner, repo: repository_name, username: context.payload.sender.login}).catch((err)=>{ return {status: 404}})).status == 204 
             console.log(`Sender (collaborator?): ${isCollaborator}`)
             if (context.eventName == 'pull_request'){
-                const labels = (await github.issues.listLabelsOnIssue({owner: repository_owner, repo: repository_name, issue_number:context.payload.pull_request.number})).data
-                const isPrAccepted = labels.find( ({ name }) => name === 'pr/accepted' ) !== undefined
                 const isFromAFork = context.payload.pull_request.head.repo.full_name !== process.env.GITHUB_REPOSITORY
                 console.log(`PR > Source Repository (full name): ${context.payload.pull_request.head.repo.full_name}`)
                 console.log(`PR > Is From a Fork?: ${isFromAFork}`)
-                console.log(`PR > isPrAccepted: ${isPrAccepted}`)
-                if(isFromAFork === true && isPrAccepted !== false ){
-                  core.setFailed('Pull Request from non-contributors fork is not accepted. Add a "pr/accepted" label to the PR to accept and trust changes coming from this PR.')   
+                if(isFromAFork === true) {
+                  const labels = (await github.issues.listLabelsOnIssue({owner: repository_owner, repo: repository_name, issue_number:context.payload.pull_request.number})).data
+                  const isPrAccepted = labels.find( ({ name }) => name === 'pr/accepted' ) !== undefined
+                  console.log(`PR > isPrAccepted: ${isPrAccepted}`)
+                  if(isPrAccepted === false) {
+                    core.setFailed('Pull Request from non-contributors fork is not accepted. Add a "pr/accepted" label to the PR to accept and trust changes coming from this PR.')   
+                  }
                 }  
             }
 
