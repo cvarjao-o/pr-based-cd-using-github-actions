@@ -68,3 +68,33 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
+  staging:
+    needs: [build]
+    runs-on: ubuntu-latest
+    environment: 
+      name: staging
+    steps:
+      - uses: actions/github-script@v3.1.0
+        with:
+          script: |
+            console.log('Deploying to Staging')
+  test:
+    needs: [staging]
+    runs-on: ubuntu-latest
+    environment: 
+      name: test
+    steps:
+      - uses: actions/github-script@v3.1.0
+        with:
+          script: |
+            console.log('Deploying to Test')
+  production:
+    needs: [test]
+    runs-on: ubuntu-latest
+    environment: 
+      name: production
+    steps:
+      - uses: actions/github-script@v3.1.0
+        with:
+          script: |
+            console.log('Deploying to Production')
