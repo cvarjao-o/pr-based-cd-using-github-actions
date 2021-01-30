@@ -34,10 +34,10 @@ jobs:
             console.log(`Sender (username): ${context.payload.sender.login}`)
             const isCollaborator = (await github.repos.checkCollaborator({owner: repository_owner, repo: repository_name, username: context.payload.sender.login}).catch((err)=>{ return {status: 404}})).status == 204 
             console.log(`Sender (collaborator?): ${isCollaborator}`)
-            const labels = (await github.issues.listLabelsOnIssue({owner: repository_owner, repo: repository_name, issue_number:context.payload.pull_request.number}))
-            console.log('labels:')
-            console.dir(labels)
             if (context.eventName == 'pull_request'){
+                const labels = (await github.issues.listLabelsOnIssue({owner: repository_owner, repo: repository_name, issue_number:context.payload.pull_request.number}))
+                console.log('labels:')
+                console.dir(labels)
                 const isFromAFork = context.payload.pull_request.head.repo.full_name !== process.env.GITHUB_REPOSITORY
                 console.log(`PR > Source Repository (full name): ${context.payload.pull_request.head.repo.full_name}`)
                 console.log(`PR > Is From a Fork?: ${isFromAFork}`)
