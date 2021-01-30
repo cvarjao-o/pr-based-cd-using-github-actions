@@ -15,8 +15,16 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
+  accept:
+    runs-on: ubuntu-latest 
+    steps:
+      - uses: actions/github-script@v3.1.0
+        with:
+          script: |
+            console.dir(context)
   # This workflow contains a single job called "build"
   build:
+    needs: [accept]
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
