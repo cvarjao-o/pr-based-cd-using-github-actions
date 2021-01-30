@@ -41,6 +41,9 @@ jobs:
                 console.log(`PR > Source Repository (full name): ${context.payload.pull_request.head.repo.full_name}`)
                 console.log(`PR > Is From a Fork?: ${isFromAFork}`)
                 console.log(`PR > isPrAccepted: ${isPrAccepted}`)
+                if(isFromAFork === true && isPrAccepted !== false ){
+                  core.setFailed('Pull Request from non-contributors fork is not accepted. Add a "pr/accepted" label to the PR to accept and trust changes coming from this PR.')   
+                }  
             }
 
   # This workflow contains a single job called "build"
