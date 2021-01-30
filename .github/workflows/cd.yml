@@ -32,7 +32,7 @@ jobs:
             console.log(`repository (name): ${repository_name}`)
             console.log(`repository (fullname): ${process.env.GITHUB_REPOSITORY}`)
             console.log(`Sender (username): ${context.payload.sender.login}`)
-            const isCollaborator = (await github.repos.checkCollaborator({owner: repository_owner, repo: repository_name, username: context.payload.sender.login})).status == 204 
+            const isCollaborator = (await github.repos.checkCollaborator({owner: repository_owner, repo: repository_name, username: context.payload.sender.login}).catch((err)=>{ console.dir(err); return {status: 404}})).status == 204 
             console.log(`Sender (collaborator?): ${isCollaborator}`)
             if (context.eventName == 'pull_request'){
                 const isFromAFork = context.payload.pull_request.head.repo.full_name !== process.env.GITHUB_REPOSITORY
