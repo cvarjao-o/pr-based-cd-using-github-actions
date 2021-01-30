@@ -27,9 +27,10 @@ jobs:
             // console.dir(github)
             // console.log('-- GITHUB --')
             const [repository_owner, repository_name] = process.env.GITHUB_REPOSITORY.split('/')
-            /*
+            
             console.log(`repository (owner): ${repository_owner}`)
             console.log(`repository (name): ${repository_name}`)
+            /*
             console.log(`repository (fullname): ${process.env.GITHUB_REPOSITORY}`)
             console.log(`Sender (username): ${context.payload.sender.login}`)
             if (context.eventName == 'pull_request'){
