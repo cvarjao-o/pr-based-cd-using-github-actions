@@ -27,6 +27,7 @@ jobs:
             // console.dir(github)
             // console.log('-- GITHUB --')
             const [repository_owner, repository_name] = process.env.GITHUB_REPOSITORY.split('/')
+            /*
             console.log(`repository (owner): ${repository_owner}`)
             console.log(`repository (name): ${repository_name}`)
             console.log(`repository (fullname): ${process.env.GITHUB_REPOSITORY}`)
@@ -38,6 +39,7 @@ jobs:
                 console.log(`PR > Source Repository (full name): ${context.payload.pull_request.head.repo.full_name}`)
                 console.log(`PR > Is From a Fork?: ${isFromAFork}`)
             }
+            */
 
   # This workflow contains a single job called "build"
   build:
