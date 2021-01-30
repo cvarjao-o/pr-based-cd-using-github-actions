@@ -21,7 +21,10 @@ jobs:
       - uses: actions/github-script@v3.1.0
         with:
           script: |
+            console.log('-- CONTEXT --')
             console.dir(context)
+            console.log('-- GITHUB --')
+            console.dir(github)
   # This workflow contains a single job called "build"
   build:
     needs: [accept]
