@@ -1,2 +1,2 @@
 # pr-based-cd-using-github-actions
-hello from a non-collaborator 6
+hello from a non-collaborator 7
