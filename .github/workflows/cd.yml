@@ -21,10 +21,24 @@ jobs:
       - uses: actions/github-script@v3.1.0
         with:
           script: |
-            console.log('-- CONTEXT --')
-            console.dir(context)
-            console.log('-- GITHUB --')
-            console.dir(github)
+            // console.log('-- CONTEXT --')
+            // console.dir(context)
+            // console.log('-- GITHUB --')
+            // console.dir(github)
+            // console.log('-- GITHUB --')
+            const [repository_owner, repository_name] = process.env.GITHUB_REPOSITORY.split('/')
+            console.log(`repository (owner): ${repository_owner}`)
+            console.log(`repository (name): ${repository_name}`)
+            console.log(`repository (fullname): ${process.env.GITHUB_REPOSITORY}`)
+            console.log(`Sender (username): ${context.payload.sender.login}`)
+            if (context.eventName == 'pull_request'){
+                const isCollaborator = await octokit.repos.checkCollaborator({repository_owner, repository_name, context.payload.sender.login})
+                console.log(`Sender (collaborator?): ${isCollaborator}`)
+                const isFromAFork = context.payload.pull_request.head.repo.full_name !== process.env.GITHUB_REPOSITORY
+                console.log(`PR > Source Repository (full name): ${context.payload.pull_request.head.repo.full_name}`)
+                console.log(`PR > Is From a Fork?: ${isFromAFork}`)
+            }
+
   # This workflow contains a single job called "build"
   build:
     needs: [accept]
