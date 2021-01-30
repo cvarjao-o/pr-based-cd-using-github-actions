@@ -36,11 +36,11 @@ jobs:
             console.log(`Sender (collaborator?): ${isCollaborator}`)
             if (context.eventName == 'pull_request'){
                 const labels = (await github.issues.listLabelsOnIssue({owner: repository_owner, repo: repository_name, issue_number:context.payload.pull_request.number})).data
-                console.log('labels:')
-                console.dir(labels)
+                const isPrAccepted = labels.find( ({ name }) => name === 'pr/accepted' ) !== undefined
                 const isFromAFork = context.payload.pull_request.head.repo.full_name !== process.env.GITHUB_REPOSITORY
                 console.log(`PR > Source Repository (full name): ${context.payload.pull_request.head.repo.full_name}`)
                 console.log(`PR > Is From a Fork?: ${isFromAFork}`)
+                console.log(`PR > isPrAccepted: ${isPrAccepted}`)
             }
 
   # This workflow contains a single job called "build"
