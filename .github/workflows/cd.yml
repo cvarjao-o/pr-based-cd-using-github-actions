@@ -34,7 +34,7 @@ jobs:
             console.log(`Sender (username): ${context.payload.sender.login}`)
             
             if (context.eventName == 'pull_request'){
-                const isCollaborator = await github.repos.checkCollaborator({repository_owner, repository_name, context.payload.sender.login})
+                const isCollaborator = await github.repos.checkCollaborator({owner: repository_owner, repo: repository_name, username: context.payload.sender.login})
                 console.log(`Sender (collaborator?): ${isCollaborator}`)
                 // const isFromAFork = context.payload.pull_request.head.repo.full_name !== process.env.GITHUB_REPOSITORY
                 // console.log(`PR > Source Repository (full name): ${context.payload.pull_request.head.repo.full_name}`)
