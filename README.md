@@ -1,3 +1,3 @@
 # pr-based-cd-using-github-actions
 
-Hello 5
+Hello 6
