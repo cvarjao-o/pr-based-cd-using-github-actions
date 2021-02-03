@@ -1,0 +1,20 @@
+name: Approve Deployment
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: 'Pull Request Number'
+        required: true
+      home:
+        description: 'Environment'
+        required: false
+        default: 'Preview'
+jobs:
+  dump:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Dump
+        run: |
+          cat > /dev/null << "EOF"
+          ${{ toJSON(github) }}
+          EOF
