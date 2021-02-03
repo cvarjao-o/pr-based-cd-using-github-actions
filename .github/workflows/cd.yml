@@ -79,7 +79,7 @@ jobs:
           script: |
             console.log('Deploying to Staging')
   test:
-    if: github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main'
+    if: (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main')
     needs: [staging]
     runs-on: ubuntu-latest
     environment: 
