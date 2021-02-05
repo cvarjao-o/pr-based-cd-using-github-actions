@@ -69,8 +69,18 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
-  staging:
+  preview/plan:
     needs: [build]
+    runs-on: ubuntu-latest
+    environment: 
+      name: production
+    steps:
+      - uses: actions/github-script@v3.1.0
+        with:
+          script: |
+            console.log('Planning PREVIEW deployment')
+  preview/deploy:
+    needs: [preview/plan]
     runs-on: ubuntu-latest
     environment: 
       name: staging
@@ -79,9 +89,20 @@ jobs:
         with:
           script: |
             console.log('Deploying to Staging')
-  test:
+  test/plan:
     if: (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main') || (github.event_name == 'push' && github.event.ref == 'refs/heads/main')
-    needs: [staging]
+    needs: [preview/deploy]
+    runs-on: ubuntu-latest
+    environment: 
+      name: production
+    steps:
+      - uses: actions/github-script@v3.1.0
+        with:
+          script: |
+            console.log('Planning TEST deployment')
+  test/deploy:
+    if: (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main') || (github.event_name == 'push' && github.event.ref == 'refs/heads/main')
+    needs: [test/plan]
     runs-on: ubuntu-latest
     environment: 
       name: test
@@ -90,9 +111,20 @@ jobs:
         with:
           script: |
             console.log('Deploying to Test')
-  production:
+  production/plan:
     if: (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main') || (github.event_name == 'push' && github.event.ref == 'refs/heads/main')
-    needs: [test]
+    needs: [test/deploy]
+    runs-on: ubuntu-latest
+    environment: 
+      name: production
+    steps:
+      - uses: actions/github-script@v3.1.0
+        with:
+          script: |
+            console.log('Planning PRODUCTION deployment')
+  production/deploy:
+    if: (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main') || (github.event_name == 'push' && github.event.ref == 'refs/heads/main')
+    needs: [production/plan]
     runs-on: ubuntu-latest
     environment: 
       name: production
