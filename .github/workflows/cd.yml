@@ -99,8 +99,12 @@ jobs:
         with:
           script: |
             const [repository_owner, repository_name] = process.env.GITHUB_REPOSITORY.split('/')
+            console.log(`GITHUB_SHA: ${process.env.GITHUB_SHA}`)
+            console.log(`repository (owner): ${repository_owner}`)
+            console.log(`repository (name): ${repository_name}`)
+            console.log(`github.checks.listForRef: ${github.checks.listForRef}`)
             const checks = (await github.checks.listForRef({owner:repository_owner, repo:repository_name, ref:process.env.GITHUB_SHA})
-            console.dir(checks)
+            console.log(checks)
   test-plan:
     if: (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main') || (github.event_name == 'push' && github.event.ref == 'refs/heads/main')
     needs: [test-ready]
