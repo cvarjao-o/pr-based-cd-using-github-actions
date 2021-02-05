@@ -29,10 +29,12 @@ jobs:
             // console.log('-- GITHUB --')
             const [repository_owner, repository_name] = process.env.GITHUB_REPOSITORY.split('/')
             
+            console.log(`GITHUB_SHA: ${process.env.GITHUB_SHA}`)
             console.log(`repository (owner): ${repository_owner}`)
             console.log(`repository (name): ${repository_name}`)
             console.log(`repository (fullname): ${process.env.GITHUB_REPOSITORY}`)
             console.log(`Sender (username): ${context.payload.sender.login}`)
+            
             const isCollaborator = (await github.repos.checkCollaborator({owner: repository_owner, repo: repository_name, username: context.payload.sender.login}).catch((err)=>{ return {status: 404}})).status == 204 
             console.log(`Sender (collaborator?): ${isCollaborator}`)
             if (context.eventName == 'pull_request'){
@@ -70,10 +72,9 @@ jobs:
           echo Add other actions to build,
           echo test, and deploy your project.
   preview/plan:
+    if: (github.event_name == 'pull_request')
     needs: [build]
     runs-on: ubuntu-latest
-    environment: 
-      name: production
     steps:
       - uses: actions/github-script@v3.1.0
         with:
@@ -89,12 +90,21 @@ jobs:
         with:
           script: |
             console.log('Deploying to Staging')
-  test/plan:
-    if: (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main') || (github.event_name == 'push' && github.event.ref == 'refs/heads/main')
+  test/ready:
+    if: always()
     needs: [preview/deploy]
     runs-on: ubuntu-latest
-    environment: 
-      name: production
+    steps:
+      - uses: actions/github-script@v3.1.0
+        with:
+          script: |
+            const [repository_owner, repository_name] = process.env.GITHUB_REPOSITORY.split('/')
+            const checks = (await github.checks.listForRef({owner:repository_owner, repo:repository_name, ref:process.env.GITHUB_SHA})
+            console.dir(checks)
+  test/plan:
+    if: (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main') || (github.event_name == 'push' && github.event.ref == 'refs/heads/main')
+    needs: [test/ready]
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/github-script@v3.1.0
         with:
@@ -115,8 +125,6 @@ jobs:
     if: (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main') || (github.event_name == 'push' && github.event.ref == 'refs/heads/main')
     needs: [test/deploy]
     runs-on: ubuntu-latest
-    environment: 
-      name: production
     steps:
       - uses: actions/github-script@v3.1.0
         with:
