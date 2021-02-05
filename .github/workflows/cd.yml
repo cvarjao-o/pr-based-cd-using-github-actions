@@ -91,7 +91,7 @@ jobs:
           script: |
             console.log('Deploying to Staging')
   test-ready:
-    if: always()
+    if: (!failure()))
     needs: [preview-deploy]
     runs-on: ubuntu-latest
     steps:
