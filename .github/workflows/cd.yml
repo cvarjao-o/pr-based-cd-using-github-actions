@@ -103,8 +103,8 @@ jobs:
             console.log(`repository (owner): ${repository_owner}`)
             console.log(`repository (name): ${repository_name}`)
             console.log(`github.checks.listForRef: ${github.checks.listForRef}`)
-            const checks = (await github.checks.listForRef({owner:repository_owner, repo:repository_name, ref:process.env.GITHUB_SHA})
-            console.log(checks)
+            // const checks = (await github.checks.listForRef({owner:repository_owner, repo:repository_name, ref:process.env.GITHUB_SHA})
+            // console.log(checks)
   test-plan:
     if: (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main') || (github.event_name == 'push' && github.event.ref == 'refs/heads/main')
     needs: [test-ready]
