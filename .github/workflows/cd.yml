@@ -104,9 +104,14 @@ jobs:
             console.log(`repository (name): ${repository_name}`)
             console.log(`github.checks.listForRef: ${github.checks.listForRef}`)
             const checks1 = (await github.checks.listForRef({owner:repository_owner, repo:repository_name, ref:process.env.GITHUB_SHA})).data
+            console.log('checks1')
             console.dir(checks1, {depth: 2})
             const checks2 = (await github.checks.listForRef({owner:repository_owner, repo:repository_name, ref:process.env.GITHUB_SHA, name: 'preview-deploy'})).data
+            console.log('checks2')
             console.dir(checks2, {depth: 2})
+            const workflowJobs = (await github.actions.listJobsForWorkflowRun({owner:repository_owner, repo:repository_name, run_id:process.env.GITHUB_RUN_ID, filter: 'latest'})).data
+            console.log('workflowJobs')
+            console.dir(workflowJobs, {depth: 2})
   test-plan:
     if: (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main') || (github.event_name == 'push' && github.event.ref == 'refs/heads/main')
     needs: [test-ready]
