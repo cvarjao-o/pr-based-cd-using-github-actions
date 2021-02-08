@@ -75,7 +75,7 @@ jobs:
           echo Add other actions to build,
           echo test, and deploy your project.
   preview-plan:
-    if: (github.event_name == 'pull_request')
+    if: (github.event_name == 'pull_request' || github.event_name == 'pull_request_target')
     needs: [build]
     runs-on: ubuntu-latest
     steps:
@@ -116,7 +116,7 @@ jobs:
             console.log('workflowJobs')
             console.dir(workflowJobs, {depth: 2})
   test-plan:
-    if: (!failure()) && ((github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main') || (github.event_name == 'push' && github.event.ref == 'refs/heads/main'))
+    if: (!failure()) && (((github.event_name == 'pull_request' || github.event_name == 'pull_request_target') && github.event.pull_request.base.ref == 'main') || (github.event_name == 'push' && github.event.ref == 'refs/heads/main'))
     needs: [test-ready]
     runs-on: ubuntu-latest
     steps:
@@ -125,7 +125,7 @@ jobs:
           script: |
             console.log('Planning TEST deployment')
   test-deploy:
-    if: (!failure()) && ((github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main') || (github.event_name == 'push' && github.event.ref == 'refs/heads/main'))
+    if: (!failure()) && (((github.event_name == 'pull_request' || github.event_name == 'pull_request_target') && github.event.pull_request.base.ref == 'main') || (github.event_name == 'push' && github.event.ref == 'refs/heads/main'))
     needs: [test-plan]
     runs-on: ubuntu-latest
     environment: 
@@ -136,7 +136,7 @@ jobs:
           script: |
             console.log('Deploying to Test')
   production-plan:
-    if: (!failure()) && ((github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main') || (github.event_name == 'push' && github.event.ref == 'refs/heads/main'))
+    if: (!failure()) && (((github.event_name == 'pull_request' || github.event_name == 'pull_request_target') && github.event.pull_request.base.ref == 'main') || (github.event_name == 'push' && github.event.ref == 'refs/heads/main'))
     needs: [test-deploy]
     runs-on: ubuntu-latest
     steps:
@@ -145,7 +145,7 @@ jobs:
           script: |
             console.log('Planning PRODUCTION deployment')
   production-deploy:
-    if: (!failure()) && ((github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main') || (github.event_name == 'push' && github.event.ref == 'refs/heads/main'))
+    if: (!failure()) && (((github.event_name == 'pull_request' || github.event_name == 'pull_request_target') && github.event.pull_request.base.ref == 'main') || (github.event_name == 'push' && github.event.ref == 'refs/heads/main'))
     needs: [production-plan]
     runs-on: ubuntu-latest
     environment: 
