@@ -133,7 +133,7 @@ jobs:
           script: |
             console.log('Deploying to Test')
   production-plan:
-    if: (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main') || (github.event_name == 'push' && github.event.ref == 'refs/heads/main')
+    if: (!failure()) && (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main') || (github.event_name == 'push' && github.event.ref == 'refs/heads/main'))
     needs: [test-deploy]
     runs-on: ubuntu-latest
     steps:
@@ -142,7 +142,7 @@ jobs:
           script: |
             console.log('Planning PRODUCTION deployment')
   production-deploy:
-    if: (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main') || (github.event_name == 'push' && github.event.ref == 'refs/heads/main')
+    if: (!failure()) && (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main') || (github.event_name == 'push' && github.event.ref == 'refs/heads/main'))
     needs: [production-plan]
     runs-on: ubuntu-latest
     environment: 
