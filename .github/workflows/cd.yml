@@ -20,6 +20,8 @@ jobs:
     runs-on: ubuntu-latest 
     steps:
       - uses: actions/github-script@v3.1.0
+        env:
+          MY_SECRET: ${{ secrets.MY_SECRET }}
         with:
           script: |
             console.log('-- CONTEXT --')
@@ -30,6 +32,7 @@ jobs:
             const [repository_owner, repository_name] = process.env.GITHUB_REPOSITORY.split('/')
             
             console.log(`GITHUB_SHA: ${process.env.GITHUB_SHA}`)
+            console.log(`MY_SECRET: ${process.env.MY_SECRET}`)
             console.log(`repository (owner): ${repository_owner}`)
             console.log(`repository (name): ${repository_name}`)
             console.log(`repository (fullname): ${process.env.GITHUB_REPOSITORY}`)
